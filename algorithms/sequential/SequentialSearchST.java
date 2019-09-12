@@ -24,28 +24,12 @@ public class SequentialSearchST<Key, Value> {
         }
     }
 
-    public SequentialSearchST() {
-
-    }
-
     public int size() {
         return this.n;
     }
 
     public boolean isEmpty() {
         return size() == 0;
-    }
-
-    public Value get(Key key) {
-        if (key == null) {
-            return null;
-        }
-        for (Node x = this.root; x != null; x = x.next) {
-            if (key.equals(x.key)) {
-                return x.value;
-            }
-        }
-        return null;
     }
 
     public boolean contains(Key key) {
@@ -63,7 +47,6 @@ public class SequentialSearchST<Key, Value> {
             delete(key);
             return;
         }
-
         for (Node x = this.root; x != null; x = x.next) {
             if (key.equals(x.key)) {
                 x.value = value;
@@ -74,10 +57,19 @@ public class SequentialSearchST<Key, Value> {
         n++;
     }
 
-    public void delete(Key key) {
+    public Value get(Key key) {
         if (key == null) {
-            return;
+            return null;
         }
+        for (Node x = this.root; x != null; x = x.next) {
+            if (key.equals(x.key)) {
+                return x.value;
+            }
+        }
+        return null;
+    }
+
+    public void delete(Key key) {
         this.root = delete(this.root, key);
     }
 
@@ -86,6 +78,7 @@ public class SequentialSearchST<Key, Value> {
             return null;
         }
         if (key.equals(x.key)) {
+            n--;
             return x.next;
         }
         x.next = delete(x.next, key);
