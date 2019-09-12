@@ -1,6 +1,6 @@
 package algorithms.test;
 
-import algorithms.hash.LinearProbingHashST;
+import algorithms.hash.SeparateChainingHashST;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.Stopwatch;
@@ -15,16 +15,16 @@ public class FrequencyCounter {
 
     public static void main(String[] args) {
         int minlen = Integer.parseInt(args[0]);
-        //1.标准符号比奥
+        //1.标准符号表
 //        ST<String, Integer> st = new ST<>();
         //2.无序链表符号表
 //        SequentialSearchST<String, Integer> st = new SequentialSearchST<>();
         //2.1 系统无序链表符号表
 //        SequentialSearchST<String, Integer> st = new SequentialSearchST<>();
         //3.基于拉链的散列表
-//        SeparateChainingHashST<String, Integer> st = new SeparateChainingHashST<>();
+        SeparateChainingHashST<String, Integer> st = new SeparateChainingHashST<>();
         //4.基于线性探测的散列表
-        LinearProbingHashST<String, Integer> st = new LinearProbingHashST<>();
+//        LinearProbingHashST<String, Integer> st = new LinearProbingHashST<>();
         //4.1系统基于线性探测的散列表
 //        LinearProbingHashST<String, Integer> st = new LinearProbingHashST<>();
 

@@ -28,10 +28,6 @@ public class SeparateChainingHashST<Key, Value> {
         }
     }
 
-    private int hash(Key key) {
-        return (key.hashCode() & 0x7fffffff) % m;
-    }
-
     public int size() {
         return this.n;
     }
@@ -40,12 +36,8 @@ public class SeparateChainingHashST<Key, Value> {
         return size() == 0;
     }
 
-    public Value get(Key key) {
-        if (key == null) {
-            return null;
-        }
-        int i = hash(key);
-        return st[i].get(key);
+    private int hash(Key key) {
+        return (key.hashCode() & 0x7fffffff) % m;
     }
 
     public boolean contains(Key key) {
@@ -53,6 +45,26 @@ public class SeparateChainingHashST<Key, Value> {
             return false;
         }
         return get(key) != null;
+    }
+
+    private void resize(int chains) {
+        SeparateChainingHashST<Key, Value>  temp= new SeparateChainingHashST<>(chains);
+        for (int i = 0; i < m; i++) {
+            for (Key key : st[i].keys()) {
+                temp.put(key, st[i].get(key));
+            }
+        }
+        this.n = temp.n;
+        this.m = temp.m;
+        this.st = temp.st;
+    }
+
+    public Value get(Key key) {
+        if (key == null) {
+            return null;
+        }
+        int i = hash(key);
+        return st[i].get(key);
     }
 
     public void put(Key key, Value value) {
@@ -76,23 +88,14 @@ public class SeparateChainingHashST<Key, Value> {
 
     }
 
-    private void resize(int chains) {
-        SeparateChainingHashST<Key, Value>  temp= new SeparateChainingHashST<>(chains);
-        for (int i = 0; i < m; i++) {
-            for (Key key : st[i].keys()) {
-                temp.put(key, st[i].get(key));
-            }
-        }
-        this.n = temp.n;
-        this.m = temp.m;
-        this.st = temp.st;
-    }
-
     public void delete(Key key) {
         if (key == null || !contains(key)) {
             return;
         }
         int i = hash(key);
+        if (contains(key)) {
+            n--;
+        }
         st[i].delete(key);
 
         if (m > INIT_CAPACITY && n <= 2 * m) {
