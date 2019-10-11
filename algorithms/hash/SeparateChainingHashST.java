@@ -12,8 +12,9 @@ import edu.princeton.cs.algs4.Queue;
 public class SeparateChainingHashST<Key, Value> {
     private static final int INIT_CAPACITY = 4;
 
-    private int n;  //键值对总数
-    private int m;  //散列表的大小
+    private int n; //键值对数量
+    private int m; //链表数组的大小
+
     private SequentialSearchST<Key, Value>[] st;
 
     public SeparateChainingHashST() {
@@ -29,26 +30,19 @@ public class SeparateChainingHashST<Key, Value> {
     }
 
     public int size() {
-        return this.n;
+        return n;
     }
 
     public boolean isEmpty() {
         return size() == 0;
     }
 
-    private int hash(Key key) {
+    public int hash(Key key) {
         return (key.hashCode() & 0x7fffffff) % m;
     }
 
-    public boolean contains(Key key) {
-        if (key == null) {
-            return false;
-        }
-        return get(key) != null;
-    }
-
-    private void resize(int chains) {
-        SeparateChainingHashST<Key, Value>  temp= new SeparateChainingHashST<>(chains);
+    public void resize(int chains) {
+        SeparateChainingHashST<Key, Value> temp = new SeparateChainingHashST<>(chains);
         for (int i = 0; i < m; i++) {
             for (Key key : st[i].keys()) {
                 temp.put(key, st[i].get(key));
@@ -57,6 +51,13 @@ public class SeparateChainingHashST<Key, Value> {
         this.n = temp.n;
         this.m = temp.m;
         this.st = temp.st;
+    }
+
+    public boolean contains(Key key) {
+        if (key == null) {
+            return false;
+        }
+        return get(key) != null;
     }
 
     public Value get(Key key) {
@@ -73,13 +74,10 @@ public class SeparateChainingHashST<Key, Value> {
         }
         if (value == null) {
             delete(key);
-            return;
         }
-
         if (n >= 10 * m) {
-            resize(2 * m);
+            resize(m * 2);
         }
-
         int i = hash(key);
         if (!st[i].contains(key)) {
             n++;
@@ -92,15 +90,12 @@ public class SeparateChainingHashST<Key, Value> {
         if (key == null || !contains(key)) {
             return;
         }
+        n--;
         int i = hash(key);
-        if (contains(key)) {
-            n--;
-        }
-        st[i].delete(key);
-
-        if (m > INIT_CAPACITY && n <= 2 * m) {
+        if (m > INIT_CAPACITY && n <= m * 2) {
             resize(m / 2);
         }
+        st[i].delete(key);
     }
 
     public Iterable<Key> keys() {
@@ -112,4 +107,14 @@ public class SeparateChainingHashST<Key, Value> {
         }
         return queue;
     }
+
+    public static void main(String[] args) {
+        SeparateChainingHashST<String, Integer> st = new SeparateChainingHashST<>();
+        st.put("Houwenjun", 1);
+        st.put("Wenjun", 2);
+        for (String key : st.keys()) {
+            System.out.println(st.get(key));
+        }
+    }
+
 }
